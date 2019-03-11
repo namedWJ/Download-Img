@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>图片下载</title>
+</head>
+<body>
+    <div class="dl">批量下载图片</div>
+</body>
+<script>
+    let imgList = [
+        {
+            img: 'http://h0.hucdn.com/open201907/eb08709beab55313_12x7.png',
+            name: '1',
+        },
+        {
+            img: 'http://h0.hucdn.com/open201907/b84563cce10f0dca_13x7.png',
+            name: '2',
+        },
+        {
+            img: 'http://h0.hucdn.com/open201907/218149b74cff2169_13x7.png',
+            name: '3',
+        },
+        {
+            img: 'http://h0.hucdn.com/open201907/79db56364cff8529_12x7.png',
+            name: '4',
+        },
+    ];
+    let dl = document.querySelector('.dl');
+    let getLooperDl = (item) => {
+        let x = new XMLHttpRequest();
+            x.open('GET', item.img, true);
+            x.responseType = 'blob';
+            x.onload = (e) => {
+                // 下载的实现
+                download(x.response, `${item.name}.jpg`, "image/jpg" );
+            };
+            x.send();
+            x.onreadystatechange = () => {
+                if (x.readyState == 4) {
+                    if (x.status === 200) {
+                        if (index >= this.imgList.length - 1) {
+                            return;
+                        }
+                        index += 1;
+                        setTimeout(() => {
+                            getLooperDl(imgList[index]);
+                        }, 1000);
+                    } else {
+                        index += 1;
+                    }
+                }
+            }
+    }
+    dl.addEventListener('click', getLooperDl(imgList[0]));
+</script>
+</html>
